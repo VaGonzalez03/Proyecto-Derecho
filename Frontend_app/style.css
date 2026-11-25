@@ -1,0 +1,38 @@
+body{
+  background: lightgray;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+#container{
+  width: 80%;
+  margin: 0px auto;
+}
+
+header{
+  color: black;
+  text-align: center;
+  height: 50px;
+  width: 100%;
+}
+
+footer{
+  color: black;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+}
+
+content{
+  float: left;
+  width: calc(80% - 80px);
+  min-height: 500px;
+  padding: 40px;
+  text-align: center;
+}
+
+aside{
+  float: right;
+  width: calc(20% - 20px);
+  min-height: 500px;
+  padding: 10px;
+}
