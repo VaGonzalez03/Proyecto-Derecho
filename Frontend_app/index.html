@@ -1,65 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>"Nombre de la Página Web"</title>
+    <title>Simulador y Gestor de Juicios</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+
     <div id="container">
 
-        <header>
-            <h1>Simulador y Gestor de Juicios</h1>
+        <header class="top-header">
+            <div class="brand">
+                <h1>Simulador y Gestor de Juicios</h1>
+            </div>
+
+            <nav aria-label="Navegación principal">
+                <button id="menuBtn" class="menu-toggle" aria-expanded="false" aria-controls="menuLista">
+                    ☰ Menú
+                </button>
+                <ul id="menuLista" class="menu-desplegable">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="crear_cuenta.html">Crear cuenta</a></li>
+                    <li><a href="calendario.html">Calendario Interactivo</a></li>
+                    <li><a href="index.html">Blog</a></li>
+                    <li><a href="index.html">Contacto</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <a href="crear_cuenta.html" class="btn-outline">Iniciar sesión</a>
+                <a href="calendario.html" class="btn-primary">Ir al Calendario</a>
+            </div>
         </header>
 
-        <nav>
-            <ul>
-                <li>
-                    <a href="index.html">Inicio</a>
-                </li>
-                <li>
-                    <a href="crear_cuenta.html">Crear cuenta</a>
-                </li>
-                <li>
-                    <a href="index.html">Pagina 2</a>
-                </li>
-                <li>
-                    <a href="index.html">Blog</a>
-                </li>
-                <li>
-                    <a href="index.html">Contacto</a>
-                </li>
-            </ul>
-        </nav>
+        <main class="layout-main">
+            <section id="content">
+                <div class="hero">
+                    <h2>Gestión y Simulación de Juicios</h2>
+                    <p>Organiza audiencias, expedientes y casos prácticos en un flujo de trabajo claro.</p>
+                </div>
 
-        <div class="clearfix"></div>
+                <div class="cards-grid">
+                    <article class="card card-purple">
+                        <h3>Expedientes</h3>
+                        <p>Registro y seguimiento estructurado de casos y etapas procesales.</p>
+                    </article>
 
-        <section id="content">
+                    <article class="card card-teal">
+                        <h3>Audiencias</h3>
+                        <p>Control de fechas, turnos y recordatorios en el calendario.</p>
+                    </article>
 
-            <article class="article">
-                <h2>Bienvenido al Simulador y </h2>
-                <h2>Gestor de Juicios</h2>
-                <p>Este es un simple simulador para gestionar juicios.</p>
-            </article>
+                    <article class="card card-blue">
+                        <h3>Simulación</h3>
+                        <p>Práctica de roles, pruebas y argumentos para tus casos.</p>
+                    </article>
+                </div>
+            </section>
 
-        </section>
-
-        <aside>
-            <h2>Barra Lateral</h2>
-            <form>
-                <input type="text">
-                <input type="Submit" value="Buscar">
-            </form>
-        </aside>
-
-        <div class="clearfix"></div>
+            <aside>
+                <h2>Barra Lateral</h2>
+                <form role="search">
+                    <input type="text" placeholder="Buscar expediente o caso..." aria-label="Buscar">
+                    <button type="submit">Buscar</button>
+                </form>
+            </aside>
+        </main>
 
         <footer>
             Derechos de autor &copy; 2026
         </footer>
 
     </div>
+
+    <script src="main.js" defer></script>
 </body>
 </html>

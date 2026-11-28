@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario Interactivo</title>
+  <link rel="stylesheet" href="calendario.css">
+</head>
+<body>
+
+  <div class="calendar-container">
+    <header class="calendar-header">
+      <h2 id="monthYearTitle"></h2>
+      <div class="controls">
+        <button id="prevMonthBtn">&lt;</button>
+        <button id="todayBtn">Hoy</button>
+        <button id="nextMonthBtn">&gt;</button>
+      </div>
+    </header>
+
+    <div class="weekdays">
+      <div>Lun</div>
+      <div>Mar</div>
+      <div>Mié</div>
+      <div>Jue</div>
+      <div>Vie</div>
+      <div>Sáb</div>
+      <div>Dom</div>
+    </div>
+
+    <div class="days-grid" id="daysGrid"></div>
+  </div>
+
+  <!-- Ventana emergente para añadir evento -->
+  <div class="modal-backdrop" id="eventModal">
+    <div class="modal-box">
+      <h3>Nuevo evento</h3>
+      <p id="selectedDateText"></p>
+      <form id="eventForm">
+        <input type="text" id="eventTitleInput" placeholder="Ej. Reunión 10:00 a.m." required>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+          <button type="submit" class="btn-save">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+    let selectedDateKey = "";
+
+    let events = JSON.parse(localStorage.getItem("misEventosCalendario")) || {};
+
+    const monthYearTitle = document.getElementById("monthYearTitle");
+    const daysGrid = document.getElementById("daysGrid");
+    const eventModal = document.getElementById("eventModal");
+    const selectedDateText = document.getElementById("selectedDateText");
+    const eventTitleInput = document.getElementById("eventTitleInput");
+
+    function renderCalendar() {
+      daysGrid.innerHTML = "";
+
+      const firstDay = new Date(currentYear, currentMonth, 1);
+      const lastDay = new Date(currentYear, currentMonth + 1, 0);
+      const totalDays = lastDay.getDate();
+
+      let startWeekday = firstDay.getDay() - 1;
+      if (startWeekday === -1) startWeekday = 6;
+
+      const monthName = firstDay.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+      monthYearTitle.textContent = monthName;
+
+      for (let i = 0; i < startWeekday; i++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "day-cell empty";
+        daysGrid.appendChild(emptyCell);
+      }
+
+      for (let day = 1; day <= totalDays; day++) {
+        const cell = document.createElement("div");
+        cell.className = "day-cell";
+
+        const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+        if (
+          day === today.getDate() &&
+          currentMonth === today.getMonth() &&
+          currentYear === today.getFullYear()
+        ) {
+          cell.classList.add("today");
+        }
+
+        const dayNum = document.createElement("div");
+        dayNum.className = "day-number";
+        dayNum.textContent = day;
+        cell.appendChild(dayNum);
+
+        if (events[dateKey]) {
+          events[dateKey].forEach((ev, index) => {
+            const tag = document.createElement("div");
+            tag.className = "event-tag";
+            tag.innerHTML = `<span>${ev}</span><button title="Eliminar">&times;</button>`;
+
+            tag.querySelector("button").addEventListener("click", (e) => {
+              e.stopPropagation();
+              events[dateKey].splice(index, 1);
+              if (events[dateKey].length === 0) delete events[dateKey];
+              saveAndRender();
+            });
+
+            cell.appendChild(tag);
+          });
+        }
+
+        cell.addEventListener("click", () => {
+          selectedDateKey = dateKey;
+          selectedDateText.textContent = `Fecha seleccionada: ${day}/${currentMonth + 1}/${currentYear}`;
+          eventTitleInput.value = "";
+          eventModal.classList.add("active");
+          eventTitleInput.focus();
+        });
+
+        daysGrid.appendChild(cell);
+      }
+    }
+
+    function saveAndRender() {
+      localStorage.setItem("misEventosCalendario", JSON.stringify(events));
+      renderCalendar();
+    }
+
+    document.getElementById("prevMonthBtn").addEventListener("click", () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderCalendar();
+    });
+
+    document.getElementById("nextMonthBtn").addEventListener("click", () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      renderCalendar();
+    });
+
+    document.getElementById("todayBtn").addEventListener("click", () => {
+      currentMonth = today.getMonth();
+      currentYear = today.getFullYear();
+      renderCalendar();
+    });
+
+    document.getElementById("cancelBtn").addEventListener("click", () => {
+      eventModal.classList.remove("active");
+    });
+
+    document.getElementById("eventForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const title = eventTitleInput.value.trim();
+      if (!title) return;
+
+      if (!events[selectedDateKey]) events[selectedDateKey] = [];
+      events[selectedDateKey].push(title);
+
+      eventModal.classList.remove("active");
+      saveAndRender();
+    });
+
+    renderCalendar();
+  </script>
+</body>
+</html>
